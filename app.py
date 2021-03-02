@@ -30,12 +30,12 @@ def index():
 @app.route("/parse")
 def add():
     transcript = webvtt.read('GMT20210210-231102_Lucah-Ueno.transcript.vtt')
-    participants_speaking_times, num_awkward_silences, participants_sentiments = getAnalytics(transcript)
+    participants_speaking_times, num_awkward_silences, participants_sentiments, num_profane_words = getAnalytics(transcript)
     sum_speaking_times = sum(participants_speaking_times.values())
     for participant in participants_speaking_times.keys():
         participants_speaking_times[participant] = int((participants_speaking_times[participant] / sum_speaking_times) * 100)
     print(str(participants_sentiments))
-    return jsonify({"participants": list(participants_speaking_times.keys()), "speaking_times": list(participants_speaking_times.values()), "sentiments": list(participants_sentiments.values()), "long_pauses": num_awkward_silences})
+    return jsonify({"participants": list(participants_speaking_times.keys()), "speaking_times": list(participants_speaking_times.values()), "sentiments": list(participants_sentiments.values()), "long_pauses": num_awkward_silences, "num_profane_words": num_profane_words})
 
 
 if __name__ == '__main__':

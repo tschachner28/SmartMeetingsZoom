@@ -17,6 +17,7 @@ fetch('http://0.0.0.0:5000/parse')
     console.log(JSON.stringify(myJson));
     console.log('hi');
     document.getElementById("long-pauses").innerHTML = myJson.long_pauses.toString();
+    document.getElementById("num-profane-words").innerHTML = myJson.num_profane_words.toString();
     drawChart();
     drawScatter();
   });

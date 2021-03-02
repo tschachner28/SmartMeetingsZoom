@@ -1,7 +1,7 @@
 import webvtt
 import datetime
 from textblob import TextBlob
-
+from profanityfilter import ProfanityFilter
 
 
 def getAnalytics(transcript):
@@ -9,11 +9,9 @@ def getAnalytics(transcript):
     num_awkward_silences = 0 # 10+ seconds of silence
     #current_start_time = datetime.datetime.strptime('00:00:03.629', '%H:%M:%S.%f') # initialize to random value
     current_end_time = None # initialize to random value
-    question_words = ['who', 'who\'s', 'who\'d', 'who\'ve', 'where', 'where\'s', 'where\'d', 'where\'ve',
-                            'what', 'what\'s', 'what\'ve', 'what\'d', 'why', 'why\'s', 'why\'ve', 'why\'d',
-                            'how', 'how\'s', 'how\'d', 'how\'ve', 'when', 'when\'s', 'which', 'whose', 'whom']
-    num_question_words = 0
     participants_polarity_subjectivity = {} # key: participant. value: [sum_polarity, sum_subjectivity, total_lines]
+    num_profane_words = 0
+    pf = ProfanityFilter()
 
     for line in transcript:
         current_start_time = datetime.datetime.strptime(line.start, '%H:%M:%S.%f')  # datetime.datetime.strptime(line[0:12], '%H:%M:%S.%f')
@@ -40,18 +38,26 @@ def getAnalytics(transcript):
             participants_polarity_subjectivity[current_participant][2] += 1
         else:
             participants_polarity_subjectivity[current_participant] = [testimonial.sentiment.polarity, testimonial.sentiment.subjectivity, 1]
+        # Check for profanity
+        if pf.censor(line.text).find('*') != -1:
+            for word in line.text.split(' '):
+                if pf.censor(word).find('*') != -1:
+                    num_profane_words += 1
+
+
     participants_average_sentiments = {} # key: participant. value: [average_polarity, average_subjectivity]
     for participant in participants_polarity_subjectivity.keys():
         participants_average_sentiments[participant] = [participants_polarity_subjectivity[participant][0]/participants_polarity_subjectivity[participant][2],
                                                         participants_polarity_subjectivity[participant][1]/participants_polarity_subjectivity[participant][2]]
 
-    return participants_speaking_times, num_awkward_silences, participants_average_sentiments
+    return participants_speaking_times, num_awkward_silences, participants_average_sentiments, num_profane_words
 
 if __name__ == '__main__':
     #transcript = webvtt.read('GMT20190928-005727_Tommy-Gaes.transcript.vtt')
     transcript = webvtt.read('GMT20210210-231102_Lucah-Ueno.transcript.vtt')
-    participants_speaking_times, num_awkward_silences, participants_average_sentiments = getAnalytics(transcript)
+    participants_speaking_times, num_awkward_silences, participants_average_sentiments, num_profane_words = getAnalytics(transcript)
     print(str(participants_speaking_times))
     print(str(num_awkward_silences))
     print(str(participants_average_sentiments))
+    print(str("num_profane_words: " + str(num_profane_words)))
     #print(str(num_question_words))
