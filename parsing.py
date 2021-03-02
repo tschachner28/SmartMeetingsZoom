@@ -1,5 +1,6 @@
 import webvtt
 import datetime
+from textblob import TextBlob
 
 
 
@@ -12,6 +13,7 @@ def getAnalytics(transcript):
                             'what', 'what\'s', 'what\'ve', 'what\'d', 'why', 'why\'s', 'why\'ve', 'why\'d',
                             'how', 'how\'s', 'how\'d', 'how\'ve', 'when', 'when\'s', 'which', 'whose', 'whom']
     num_question_words = 0
+    participants_polarity_subjectivity = {} # key: participant. value: [sum_polarity, sum_subjectivity, total_lines]
 
     for line in transcript:
         current_start_time = datetime.datetime.strptime(line.start, '%H:%M:%S.%f')  # datetime.datetime.strptime(line[0:12], '%H:%M:%S.%f')
@@ -30,12 +32,26 @@ def getAnalytics(transcript):
         #current_speaking_time = datetime.datetime.strptime()
         #print(line)
         #for word in question_words:
-    return participants_speaking_times, num_awkward_silences, num_question_words
+        # Sentiment analysis
+        testimonial = TextBlob(line.text[participant_end_index + 2:])
+        if current_participant in participants_polarity_subjectivity.keys():
+            participants_polarity_subjectivity[current_participant][0] += testimonial.sentiment.polarity
+            participants_polarity_subjectivity[current_participant][1] += testimonial.sentiment.subjectivity
+            participants_polarity_subjectivity[current_participant][2] += 1
+        else:
+            participants_polarity_subjectivity[current_participant] = [testimonial.sentiment.polarity, testimonial.sentiment.subjectivity, 1]
+    participants_average_sentiments = {} # key: participant. value: [average_polarity, average_subjectivity]
+    for participant in participants_polarity_subjectivity.keys():
+        participants_average_sentiments[participant] = [participants_polarity_subjectivity[participant][0]/participants_polarity_subjectivity[participant][2],
+                                                        participants_polarity_subjectivity[participant][1]/participants_polarity_subjectivity[participant][2]]
+
+    return participants_speaking_times, num_awkward_silences, participants_average_sentiments
 
 if __name__ == '__main__':
     #transcript = webvtt.read('GMT20190928-005727_Tommy-Gaes.transcript.vtt')
     transcript = webvtt.read('GMT20210210-231102_Lucah-Ueno.transcript.vtt')
-    participants_speaking_times, num_awkward_silences, question_words = getAnalytics(transcript)
+    participants_speaking_times, num_awkward_silences, participants_average_sentiments = getAnalytics(transcript)
     print(str(participants_speaking_times))
     print(str(num_awkward_silences))
+    print(str(participants_average_sentiments))
     #print(str(num_question_words))

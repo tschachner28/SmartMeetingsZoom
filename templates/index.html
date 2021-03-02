@@ -1,3 +1,4 @@
+<!-- We used the SB Admin 2 template from https://startbootstrap.com/themes/admin-dashboard -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,6 +21,9 @@
     <!-- Custom styles for this template-->
     <!-- <link href="css/sb-admin-2.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/sb-admin-2.min.css') }}">
+
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+
 
 </head>
 
@@ -102,10 +106,20 @@
                                     <div class="chart-pie pt-4 pb-2">
                                         <canvas id="myPieChart"></canvas>
                                     </div>
-
                                 </div>
+
+
+
                             </div>
-                        </div>
+
+                            
+                                                         <!-- Objectivity and polarity -->
+                            <div id="scatterplot" style="width: 800px; height: 400px;"></div>
+
+
+
+
+
                     </div>
 
 
@@ -181,6 +195,9 @@
     <!-- <script src="js/demo/chart-pie-demo.js"></script> -->
     <!-- <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script> -->
     <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
+
+
+
 
 
 </body>
