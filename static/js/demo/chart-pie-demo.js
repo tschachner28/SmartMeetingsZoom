@@ -6,6 +6,12 @@ Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,Bli
 Chart.defaults.global.defaultFontColor = '#858796';
 console.log('before fetch');
 var json_data = null;
+var ttmuch = [];
+var ttless = [];  
+var avepol = 0;
+var aveobj = 0;
+var maxtalk = 0;
+var mintalk = 0;
 
 fetch('http://0.0.0.0:5000/parse')
   .then((response) => {
@@ -20,7 +26,124 @@ fetch('http://0.0.0.0:5000/parse')
     document.getElementById("num-profane-words").innerHTML = myJson.num_profane_words.toString();
     drawChart();
     drawScatter();
+    fillSum();
   });
+
+function fillSum() {
+  var innerselect = '<a class="dropdown-item"><button type="button" onclick="changeSum(-1)">Team</button></a><div class="dropdown-divider"></div>'
+  var numofpar = json_data.participants.length;
+  maxtalk = (1/numofpar) * 130;
+  mintalk = (1/numofpar) * 70;
+  for (i=0; i<numofpar; i++) {
+    avepol += json_data.sentiments[i][0];
+    aveobj += json_data.sentiments[i][1];
+    if (json_data.speaking_times[i] > maxtalk) {
+      ttmuch.push(json_data.participants[i]);
+    } else if (json_data.speaking_times[i] < mintalk) {
+      ttless.push(json_data.participants[i]);
+    }
+    innerselect += '<a class="dropdown-item"><button type="button" onclick="changeSum(' + i.toString() + ')">' + json_data.participants[i] + '</button></a>'
+  }
+  document.getElementById("people").innerHTML = innerselect;
+  aveobj /= numofpar;
+  avepol /= numofpar;
+  everyoneSum();
+}
+
+function everyoneSum() {
+  if (json_data.num_profane_words > 0) {
+    document.getElementById("sum-unprof").innerHTML = "Let's encourage each other to use professional language.";
+  } else {
+    document.getElementById("sum-unprof").innerHTML = "Great job using professional language!";
+  }
+  if (ttless.length == 0 && ttmuch.length == 0) {
+    document.getElementById("sum-tt").innerHTML = "Nice job sharing speaking times!";
+  } else {
+    document.getElementById("sum-tt").innerHTML = "For the next meeting"
+    if (ttmuch.length == 1) {
+      document.getElementById("sum-tt").innerHTML += ttless[ttless.length-1];
+    } else if (ttmuch.length > 0) {
+      for (i=0; i<ttmuch.length-1; i++) {
+        document.getElementById("sum-tt").innerHTML += ttless[i] + ", ";
+      }
+      document.getElementById("sum-tt").innerHTML += "and " + ttmuch[ttmuch.length-1];
+    }
+    document.getElementById("sum-tt").innerHTML += ", let's give more speaking time to ";
+    if (ttless.length == 1) {
+      document.getElementById("sum-tt").innerHTML += ttless[ttless.length-1] + ".";
+    } else if (ttless.length > 0) {
+      for (i=0; i<ttless.length-1; i++) {
+        document.getElementById("sum-tt").innerHTML += ttless[i] + ", ";
+      }
+      document.getElementById("sum-tt").innerHTML += "and " + ttless[ttless.length-1] + ".";
+    } else {
+      document.getElementById("sum-tt").innerHTML += "other people.";
+    }
+  }
+  if (avepol < 0) {
+    document.getElementById("sum-pol").innerHTML = "Being more positive could brighten the mood in the next meeting.";
+  } else {
+    document.getElementById("sum-pol").innerHTML = "Amazing job keeping the mood positive!";
+  }
+  if (aveobj < 0.25) {
+    document.getElementById("sum-obj").innerHTML = "Being more objective could help your next meeting.";
+  } else if (aveobj > 0.75) {
+    document.getElementById("sum-obj").innerHTML = "Voicing more opinions could help your next meeting.";
+  } else {
+    document.getElementById("sum-obj").innerHTML = "Wonderful job keeping balance between objectivity and subjectivity!";
+  }
+  if (json_data.long_pauses > 3) {
+    document.getElementById("sum-pause").innerHTML = "Let's be more prepared to efficiently run the meeting.";
+  } else {
+    document.getElementById("sum-pause").innerHTML = "Fantastic job keeping the conversation going!";
+  }
+}
+
+function changeSum(pnum) {
+  if (pnum == -1) {
+    everyoneSum();
+  }
+  else {
+    //talking time
+    if (ttless.includes(json_data.participants[pnum])) {
+      document.getElementById("sum-tt").innerHTML = "Let's try to speak more in the next meeting."
+    } else {
+      if (ttmuch.includes(json_data.participants[pnum])) {
+        document.getElementById("sum-tt").innerHTML = "Let's try to talk less";
+      } else {
+        document.getElementById("sum-tt").innerHTML = "Keep up the balanced talking time";
+      }
+      if (ttless.length > 0) {
+        document.getElementById("sum-tt").innerHTML += ", and let's encourage ";
+        if (ttless.length == 1) {
+          document.getElementById("sum-tt").innerHTML += ttless[ttless.length-1] + " to talk more.";
+        } else if (ttless.length > 0) {
+          for (i=0; i<ttless.length-1; i++) {
+            document.getElementById("sum-tt").innerHTML += ttless[i] + ", ";
+          }
+          document.getElementById("sum-tt").innerHTML += "and " + ttless[ttless.length-1] + " to talk more.";
+        }
+      } else {
+        document.getElementById("sum-tt").innerHTML += "."
+      }
+    }
+  }
+  //pol
+  if (json_data.sentiments[pnum][0] < 0) {
+    document.getElementById("sum-pol").innerHTML = "Being more positive could brighten the mood in the next meeting.";
+  } else {
+    document.getElementById("sum-pol").innerHTML = "Amazing job keeping the mood positive!";
+  }
+  //obj
+  if (json_data.sentiments[pnum][1] < 0.25) {
+    document.getElementById("sum-obj").innerHTML = "Being more objective could help your next meeting.";
+  } else if (aveobj > 0.75) {
+    document.getElementById("sum-obj").innerHTML = "Voicing more opinions than facts could help your next meeting.";
+  } else {
+    document.getElementById("sum-obj").innerHTML = "Wonderful job keeping balance between objectivity and subjectivity!";
+  }
+}
+
 
 function drawChart() {
   // Pie Chart Example
