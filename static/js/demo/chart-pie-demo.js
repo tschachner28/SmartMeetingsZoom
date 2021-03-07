@@ -13,7 +13,7 @@ var aveobj = 0;
 var maxtalk = 0;
 var mintalk = 0;
 
-fetch('http://0.0.0.0:5000/parse')
+fetch('http://127.0.0.1:5000/parse')
   .then((response) => {
     return response.json();
   })
