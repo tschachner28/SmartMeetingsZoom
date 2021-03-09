@@ -59,16 +59,16 @@ function everyoneSum() {
   if (ttless.length == 0 && ttmuch.length == 0) {
     document.getElementById("sum-tt").innerHTML = "Nice job sharing speaking times!";
   } else {
-    document.getElementById("sum-tt").innerHTML = "For the next meeting"
+    document.getElementById("sum-tt").innerHTML = "For the next meeting, ";
     if (ttmuch.length == 1) {
-      document.getElementById("sum-tt").innerHTML += ttless[ttless.length-1];
+      document.getElementById("sum-tt").innerHTML += ttmuch[ttmuch.length-1] + ", ";
     } else if (ttmuch.length > 0) {
       for (i=0; i<ttmuch.length-1; i++) {
         document.getElementById("sum-tt").innerHTML += ttless[i] + ", ";
       }
-      document.getElementById("sum-tt").innerHTML += "and " + ttmuch[ttmuch.length-1];
+      document.getElementById("sum-tt").innerHTML += "and " + ttmuch[ttmuch.length-1] + ", ";
     }
-    document.getElementById("sum-tt").innerHTML += ", let's give more speaking time to ";
+    document.getElementById("sum-tt").innerHTML += "let's give more speaking time to ";
     if (ttless.length == 1) {
       document.getElementById("sum-tt").innerHTML += ttless[ttless.length-1] + ".";
     } else if (ttless.length > 0) {
@@ -240,8 +240,8 @@ chart.xScale().maximum(1);
                 fill: "#ccfff2",
                 title: {
                     text: "Positive Polarity, High Subjectivity",
-                    fontColor: "#000000",
-                    fontSize: "20",
+                    fontColor: "#A9A9A9",
+                    fontSize: "14",
                     fontWeight: "bold",
 
                 }
@@ -249,27 +249,27 @@ chart.xScale().maximum(1);
             rightBottom: {
                 fill: "#b7e9f7",
                 title: {
-                    fontColor: "#000000",
+                    fontColor: "#A9A9A9",
                     text: "Positive Polarity, Low Subjectivity",
-                    fontSize: "20",
+                    fontSize: "14",
                     fontWeight: "bold"
                 }
             },
             leftBottom: {
                 fill: "#e9d3ff",
                 title: {
-                    fontColor: "#000000",
+                    fontColor: "#A9A9A9",
                     text: "Negative Polarity, Low Subjectivity",
-                    fontSize: "20",
+                    fontSize: "14",
                     fontWeight: "bold"
                 }
             },
             leftTop: {
                 fill: "#CBC3E3",
                 title: {
-                    fontColor: "#000000",
+                    fontColor: "#A9A9A9",
                     text: "Negative Polarity, High Subjectivity",
-                    fontSize: "20",
+                    fontSize: "14",
                     fontWeight: "bold"
                 }
             }

@@ -41,7 +41,7 @@
             <div id="content">
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow">
 
                 </nav>
                 <!-- End of Topbar -->
@@ -51,17 +51,16 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Zoom Meetings Analytics Dashboard</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Smart Meetings Zoom Analytics Dashboard</h1>
                     </div>
                     
                     <!-- Content Row -->
                     <div class="row">
 
                         <!-- Summary -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="col-xl-12 col-md-12 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Evaluation Summary</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -79,12 +78,12 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Your Evaluation Summary</div>
-                                            <div id="sum-unprof" class="h5 mb-0 font-weight-bold text-gray-800">your team is not professional</div>
-                                            <div id="sum-tt" class="h5 mb-0 font-weight-bold text-gray-800">talk less</div>
-                                            <div id="sum-pol" class="h5 mb-0 font-weight-bold text-gray-800">keep up positivity</div>
-                                            <div id="sum-obj" class="h5 mb-0 font-weight-bold text-gray-800">voice opinions</div>
-                                            <div id="sum-pause" class="h5 mb-0 font-weight-bold text-gray-800">encourage Bob to speak</div>
+                                            <!--<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Your Evaluation Summary</div>-->
+                                            <div id="sum-unprof" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                            <div id="sum-tt" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                            <div id="sum-pol" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                            <div id="sum-obj" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                            <div id="sum-pause" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -95,23 +94,59 @@
                     <!-- Content Row -->
                     <div class="row">
 
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
+                        <!-- Pauses and Words Count -->
+                        <div class="col-xl-2 col-md-6">
+                            <div class="card shadow h-100 mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-info">Quick Stats</h6>
+                                </div>
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                                 Number of Long Pauses</div>
-                                            <div id="long-pauses" class="h5 mb-0 font-weight-bold text-gray-800">40,000</div>
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            <div id="long-pauses" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                                 Number of Unprofessional Words</div>
-                                            <div id="num-profane-words" class="h5 mb-0 font-weight-bold text-gray-800">40,000</div>
+                                            <div id="num-profane-words" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Pie Chart -->
+                        <div class="col-xl-3 col-lg-5">
+                            <div class="card shadow h-100 mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-info">Participants' Percentage of Speaking Time</h6>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-pie"> <!-- pt-4 pb-2 -->
+                                        <canvas id="myPieChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                                                         <!-- Objectivity and polarity -->
+
+                        </div>
+                        <!-- Scatterplot -->
+                        <div class="col-xl-7 col-lg-5">
+                            <div class="card shadow h-100 mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-info">Polarity and Subjectivity</h6>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div id="scatterplot" style="width: 800px; height: 400px; color: darkgray;"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
 
                     <!-- Content Row -->
@@ -119,9 +154,9 @@
                     <div class="row">
 
                         <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
+                        <!--<div class="col-xl-4 col-lg-5">
                             <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
+
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Participants' Percentage of Speaking Time</h6>
@@ -140,28 +175,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Card Body -->
+
                                 <div class="card-body">
                                     <div class="chart-pie pt-4 pb-2">
                                         <canvas id="myPieChart"></canvas>
                                     </div>
                                 </div>
-
-
-
                             </div>
 
-                            
-                                                         <!-- Objectivity and polarity -->
                             <div id="scatterplot" style="width: 800px; height: 400px;"></div>
-
-
-
-
-
-                    </div>
-
-
+                        </div> -->
                 </div>
                 <!-- /.container-fluid -->
 
